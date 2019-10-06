@@ -19,7 +19,8 @@
     "noEmit": true,
     "jsx": "react",
     "baseUrl": "src",
-    "incremental": true
+    "incremental": true,
+    "strictNullChecks": true,
   },
   "include": [
     "src"
