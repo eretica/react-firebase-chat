@@ -3,6 +3,11 @@ import { ThunkDispatch } from 'redux-thunk'
 import { IDispatchProps, Home } from '../components/Home'
 import { IStore } from '../stores'
 import { IUserActionsTypes, userLoginAction } from '../actions/user'
+import { IMapStateToProps } from '../components/Room'
+
+const mapStateToProps = (state: IStore): IMapStateToProps => ({
+  loginUser: state.user.user!,
+})
 
 const mapDispatchToProps = (
   dispatch: ThunkDispatch<IStore, void, IUserActionsTypes>
@@ -11,6 +16,6 @@ const mapDispatchToProps = (
 })
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Home)

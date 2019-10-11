@@ -1,18 +1,32 @@
-import React, { FC, useRef } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet'
-import { useHistory } from 'react-router'
+import useRouter from 'use-react-router'
 import { paths } from '../paths'
 import { IUserActions } from '../actions/user'
+import { ILoginUser } from '../types'
+
+export interface IMapStateToProps {
+  loginUser: ILoginUser
+}
 
 export interface IDispatchProps {
   login: (payload: IUserActions['login']['payload']) => Promise<void>
 }
 
-type IProps = IDispatchProps
+type IProps = IMapStateToProps & IDispatchProps
 
-export const Home: FC<IProps> = ({ login }) => {
+export const Home: FC<IProps> = ({ login, loginUser }) => {
   const inputRef = useRef<HTMLInputElement>(null)
-  const history = useHistory()
+  const { history } = useRouter()
+
+  useEffect(() => {
+    console.log(loginUser)
+    if (!loginUser) {
+      return
+    }
+
+    history.push(paths.room)
+  }, [loginUser])
 
   return (
     <div>
@@ -29,9 +43,7 @@ export const Home: FC<IProps> = ({ login }) => {
             return
           }
 
-          login({ name }).then(() => {
-            history.push(paths.room)
-          })
+          login({ name })
         }}
       >
         入室
