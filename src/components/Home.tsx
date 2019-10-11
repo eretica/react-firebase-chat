@@ -1,16 +1,16 @@
 import React, { FC, useRef } from 'react'
 import { Helmet } from 'react-helmet'
 import { useHistory } from 'react-router'
-import { IUserActions } from '../reducers/user'
 import { paths } from '../paths'
 import { IStore } from '../stores'
+import { IRoomActions } from '../actions/room'
 
 export interface IMapStateToProps {
-  user: IStore['user']
+  user: IStore['room']
 }
 
 export interface IDispatchProps {
-  enter: (payload: IUserActions['enter']['payload']) => Promise<void>
+  enter: (payload: IRoomActions['enter']['payload']) => Promise<void>
 }
 
 type IProps = IMapStateToProps & IDispatchProps

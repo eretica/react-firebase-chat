@@ -3,16 +3,16 @@ import { Helmet } from 'react-helmet'
 import { useHistory } from 'react-router'
 import { firestore } from 'firebase/app'
 import { IStore } from '../stores'
-import { IUserActions } from '../reducers/user'
 import { paths } from '../paths'
 import { db } from '../firebase'
+import { IRoomActions } from '../actions/room'
 
 export type IMapStateToProps = {
-  user: IStore['user']
+  user: IStore['room']
 }
 
 export interface IDispatchProps {
-  leave: (payload: IUserActions['leave']['payload']) => Promise<void>
+  leave: (payload: IRoomActions['leave']['payload']) => Promise<void>
 }
 
 type IProps = IMapStateToProps & IDispatchProps
