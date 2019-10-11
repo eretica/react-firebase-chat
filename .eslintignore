@@ -1,2 +1,2 @@
 node_modules/
-*.config.example.js
+*.firebase.config.example.js

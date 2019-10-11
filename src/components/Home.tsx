@@ -2,20 +2,15 @@ import React, { FC, useRef } from 'react'
 import { Helmet } from 'react-helmet'
 import { useHistory } from 'react-router'
 import { paths } from '../paths'
-import { IStore } from '../stores'
-import { IRoomActions } from '../actions/room'
-
-export interface IMapStateToProps {
-  user: IStore['room']
-}
+import { IUserActions } from '../actions/user'
 
 export interface IDispatchProps {
-  enter: (payload: IRoomActions['enter']['payload']) => Promise<void>
+  login: (payload: IUserActions['login']['payload']) => Promise<void>
 }
 
-type IProps = IMapStateToProps & IDispatchProps
+type IProps = IDispatchProps
 
-export const Home: FC<IProps> = ({ enter }) => {
+export const Home: FC<IProps> = ({ login }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const history = useHistory()
 
@@ -28,7 +23,13 @@ export const Home: FC<IProps> = ({ enter }) => {
       <button
         type="button"
         onClick={() => {
-          enter({ name: inputRef.current!.value }).then(() => {
+          const name = inputRef.current!.value
+
+          if (name.length === 0) {
+            return
+          }
+
+          login({ name }).then(() => {
             history.push(paths.room)
           })
         }}

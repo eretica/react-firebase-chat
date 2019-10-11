@@ -3,8 +3,8 @@ import { ActionCreator, Dispatch } from 'redux'
 import { ActionMapPickActions } from '../types'
 
 export enum ROOM_ACTION_TYPE {
-  ENTER = 'ENTER',
-  LEAVE = 'LEAVE',
+  ENTER = 'room/ENTER',
+  LEAVE = 'room/LEAVE',
 }
 
 interface IActions {

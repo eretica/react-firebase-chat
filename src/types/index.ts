@@ -4,8 +4,6 @@ export interface ActionType {
   payload: {}
 }
 
-export type MapToActions<T> = T[keyof T][keyof T[keyof T]]
-
 // MapからKeyを元に全てを取り出す
 export type PickAll<T> = T[keyof T]
 

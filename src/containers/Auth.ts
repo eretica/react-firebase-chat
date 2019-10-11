@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { IStore } from '../stores'
-import { IDispatchProps, IMapStateToProps, Room } from '../components/Room'
-import { IUserActionsTypes, userLoginAction } from '../actions/user'
+import { IMapStateToProps, IDispatchProps, Auth } from '../components/Auth'
+import { IUserActionsTypes, userSetAction } from '../actions/user'
 
 const mapStateToProps = (state: IStore): IMapStateToProps => {
   return {
@@ -13,10 +13,10 @@ const mapStateToProps = (state: IStore): IMapStateToProps => {
 const mapDispatchToProps = (
   dispatch: ThunkDispatch<IStore, void, IUserActionsTypes>
 ): IDispatchProps => ({
-  logout: payload => dispatch(userLoginAction(payload)),
+  setUser: payload => dispatch(userSetAction(payload)),
 })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Room)
+)(Auth)

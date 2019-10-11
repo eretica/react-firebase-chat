@@ -4,15 +4,15 @@ import { useHistory } from 'react-router'
 import { firestore } from 'firebase/app'
 import { IStore } from '../stores'
 import { paths } from '../paths'
-import { db } from '../firebase'
+import { db } from '../helpers/firebase'
 import { IRoomActions } from '../actions/room'
 
 export type IMapStateToProps = {
-  user: IStore['room']
+  user: IStore['user']['user']
 }
 
 export interface IDispatchProps {
-  leave: (payload: IRoomActions['leave']['payload']) => Promise<void>
+  logout: (payload: IRoomActions['leave']['payload']) => Promise<void>
 }
 
 type IProps = IMapStateToProps & IDispatchProps
@@ -24,14 +24,14 @@ interface IMessage {
   createdAt: firestore.FieldValue | null
 }
 
-export const Room: FC<IProps> = ({ user, leave }) => {
+export const Room: FC<IProps> = ({ user, logout }) => {
   const history = useHistory()
   const inputRef = useRef<HTMLInputElement>(null)
   const [tests, setTests] = useState<{ name: string; message: string }[]>([])
 
   const addMessage = (message: string) => {
     const data: IMessage = {
-      name: user.name!,
+      name: user!.displayName!,
       message,
       fetchedAt: firestore.Timestamp.fromDate(new Date(0)),
       createdAt: firestore.FieldValue.serverTimestamp(),
@@ -60,7 +60,7 @@ export const Room: FC<IProps> = ({ user, leave }) => {
     <div>
       <Helmet title="Room" />
       <h1>Room</h1>
-      hi {user.name}
+      hi {user!.displayName}
       <ul>
         {tests.map(test => (
           <li key={test.message}>
@@ -87,7 +87,7 @@ export const Room: FC<IProps> = ({ user, leave }) => {
       <button
         type="button"
         onClick={() => {
-          leave({}).then(() => {
+          logout({}).then(() => {
             history.push(paths.home)
           })
         }}
