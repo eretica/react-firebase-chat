@@ -1,5 +1,5 @@
 // actionTypeの型
-import { firestore, UserInfo } from 'firebase'
+import { firestore } from 'firebase'
 
 export interface ActionType {
   type: string
@@ -15,17 +15,24 @@ export type ThunkActionMapPickActions<T> = Extract<PickAll<PickAll<T>>, ActionTy
 // Actionsの定義からActionTypeに一致するものだけ取り出す
 export type ActionMapPickActions<T> = Extract<PickAll<T>, ActionType>
 
-export type ILoginUser = UserInfo
+export type ILoginUser = {
+  uid: string
+  name: string
+}
 
 export interface IMessageForPost {
-  name: string
+  uid: string
   message: string
   createdAt: firestore.FieldValue | null
+  user: firestore.DocumentReference
+  userName: string
 }
 
 export interface IMessage {
   id: string
-  name: string
+  uid: string
   message: string
+  user: firestore.DocumentReference
+  userName: string
   createdAt: firestore.FieldValue | null
 }

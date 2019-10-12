@@ -4,7 +4,6 @@ import { paths } from './paths'
 import Home from './containers/Home'
 import Room from './containers/Room'
 import Auth from './containers/Auth'
-import AuthProvider from './containers/AuthProvider'
 import NavigationBar from './containers/NavigationBar'
 
 const App: FC = () => {
@@ -12,13 +11,12 @@ const App: FC = () => {
     <BrowserRouter>
       <NavigationBar />
       <Switch>
-        <AuthProvider>
-          <Route exact path={paths.home} component={Home} />
-          <Auth>
-            <Route exact path={paths.room} component={Room} />
-          </Auth>
-          <Redirect to={paths.home} />
-        </AuthProvider>
+        <Route exact path={paths.home} component={Home} />
+        <Auth>
+          <Route exact path={paths.room} component={Room} />
+          <Redirect to={paths.room} />
+        </Auth>
+        <Redirect to={paths.home} />
       </Switch>
     </BrowserRouter>
   )

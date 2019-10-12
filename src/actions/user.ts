@@ -1,7 +1,6 @@
 import { ThunkAction } from 'redux-thunk'
 import { ActionCreator, Dispatch } from 'redux'
-import { UserInfo } from 'firebase'
-import { ActionMapPickActions, ThunkActionMapPickActions } from '../types'
+import { ActionMapPickActions, ILoginUser, ThunkActionMapPickActions } from '../types'
 import { auth } from '../helpers/firebase'
 
 export enum USER_ACTION_TYPE {
@@ -18,7 +17,7 @@ interface IThunkActions {
     success: {
       type: USER_ACTION_TYPE.LOGIN
       payload: {
-        user: UserInfo
+        user: ILoginUser
       }
     }
   }
@@ -35,7 +34,7 @@ interface IActions {
   set: {
     type: USER_ACTION_TYPE.SET
     payload: {
-      user: UserInfo | null
+      user: ILoginUser | null
     }
   }
 }
@@ -47,7 +46,9 @@ export type IUserActions = IThunkActions & IActions
 export const userLoginAction: ActionCreator<
   ThunkAction<Promise<void>, {}, void, IUserActions['login']['success']>
 > = (payload: IUserActions['login']['payload']) => async (dispatch: Dispatch) => {
-  const credential = await auth.signInAnonymously()
+  const credential = await auth.signInAnonymously().catch(e => {
+    throw e
+  })
 
   await credential.user!.updateProfile({
     displayName: payload.name,
@@ -56,7 +57,10 @@ export const userLoginAction: ActionCreator<
   dispatch<IUserActions['login']['success']>({
     type: USER_ACTION_TYPE.LOGIN,
     payload: {
-      user: credential.user!,
+      user: {
+        uid: credential.user!.uid,
+        name: payload.name,
+      },
     },
   })
 }

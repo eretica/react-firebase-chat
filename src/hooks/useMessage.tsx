@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { firestore } from 'firebase'
-import { IMessage, IMessageForPost } from '../types'
+import { ILoginUser, IMessage, IMessageForPost } from '../types'
 import { db } from '../helpers/firebase'
+import { COLLECTION } from '../firebase/constraints'
 
 export const useMessage = () => {
   const [messages, setMessages] = useState<IMessage[]>([])
@@ -9,34 +10,27 @@ export const useMessage = () => {
 
   useEffect(() => {
     const unsubscribe = db
-      .collection('tests')
+      .collection(COLLECTION.MESSAGES)
       .orderBy('createdAt')
-      .onSnapshot(snapshot => {
+      .onSnapshot(async snapshot => {
         setInitialized(true)
-        const data = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as IMessage))
-        setMessages(data)
+        setMessages(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as IMessage)))
       })
 
     return () => unsubscribe()
   }, [])
 
-  const addMessage = async (message: string) => {
+  const addMessage = async (user: ILoginUser, message: string) => {
     const data: IMessageForPost = {
-      name: 'dummy',
+      uid: user.uid,
       message,
+      user: db.doc(`${COLLECTION.USERS}/${user.uid}`),
+      userName: user.name,
       // fetchedAt: firestore.Timestamp.fromDate(new Date(0)),
       createdAt: firestore.FieldValue.serverTimestamp(),
     }
 
-    await db
-      .collection('tests')
-      .add(data)
-      .then(() => {
-        console.log('Document successfully written!')
-      })
-      .catch((error: any) => {
-        console.error('Error writing document: ', error)
-      })
+    return db.collection(COLLECTION.MESSAGES).add(data)
   }
 
   return { messages, addMessage, initialized }

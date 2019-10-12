@@ -1,6 +1,7 @@
-import React, { FC, useEffect, useRef } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import useRouter from 'use-react-router'
+import { toast } from 'react-toastify'
 import { paths } from '../paths'
 import { IUserActions } from '../actions/user'
 import { ILoginUser } from '../types'
@@ -16,11 +17,12 @@ export interface IDispatchProps {
 type IProps = IMapStateToProps & IDispatchProps
 
 export const Home: FC<IProps> = ({ login, loginUser }) => {
-  const inputRef = useRef<HTMLInputElement>(null)
   const { history } = useRouter()
+  const [posting, setPosting] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const loginButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    console.log(loginUser)
     if (!loginUser) {
       return
     }
@@ -32,10 +34,21 @@ export const Home: FC<IProps> = ({ login, loginUser }) => {
     <div>
       <Helmet title="Home" />
       <h1>Home</h1>
-      <input type="text" ref={inputRef} />
+      <input
+        type="text"
+        ref={inputRef}
+        onKeyPress={e => {
+          if (e.key === 'Enter') {
+            loginButtonRef.current!.click()
+          }
+        }}
+      />
       <br />
       <button
         type="button"
+        disabled={posting}
+        ref={loginButtonRef}
+        style={{ color: posting ? 'blue' : 'red' }}
         onClick={() => {
           const name = inputRef.current!.value
 
@@ -43,7 +56,15 @@ export const Home: FC<IProps> = ({ login, loginUser }) => {
             return
           }
 
+          setPosting(true)
           login({ name })
+            .then(() => {
+              toast.success('入室しました')
+            })
+            .catch(() => {
+              toast.error('入室できませんでした')
+              setPosting(false)
+            })
         }}
       >
         入室

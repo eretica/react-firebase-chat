@@ -1,14 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
+import 'react-toastify/dist/ReactToastify.css'
 import { Provider } from 'react-redux'
+import { toast, ToastContainer } from 'react-toastify'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { store } from './stores'
+import AuthProvider from './containers/AuthProvider'
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <ToastContainer position={toast.POSITION.TOP_RIGHT} autoClose={2000} />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </Provider>,
   document.getElementById('root')
 )

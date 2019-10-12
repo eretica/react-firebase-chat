@@ -1,26 +1,16 @@
 import React, { FC, useRef } from 'react'
 import { Helmet } from 'react-helmet'
-import { useHistory } from 'react-router'
-import { paths } from '../paths'
-import { IRoomActions } from '../actions/room'
+import { toast } from 'react-toastify'
 import { ILoginUser } from '../types'
-import { IUserActions } from '../actions/user'
 import { useMessage } from '../hooks/useMessage'
 
 export type IMapStateToProps = {
   loginUser: ILoginUser
 }
 
-export interface IDispatchProps {
-  postMessage: (payload: IRoomActions['postMessage']['payload']) => Promise<void>
-  setMessage: (payload: IRoomActions['setMessages']['payload']) => Promise<void>
-  logout: (payload: IUserActions['logout']['payload']) => Promise<void>
-}
+type IProps = IMapStateToProps
 
-type IProps = IMapStateToProps & IDispatchProps
-
-export const Room: FC<IProps> = ({ logout }) => {
-  const history = useHistory()
+export const Room: FC<IProps> = ({ loginUser }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const sendButtonRef = useRef<HTMLButtonElement>(null)
   const { messages, addMessage, initialized } = useMessage()
@@ -29,6 +19,7 @@ export const Room: FC<IProps> = ({ logout }) => {
     <div>
       <Helmet title="Room" />
       <h1>Room</h1>
+      <p>{loginUser.name}</p>
 
       {!initialized ? (
         <p>fetching</p>
@@ -37,7 +28,7 @@ export const Room: FC<IProps> = ({ logout }) => {
           <ul>
             {messages.map(test => (
               <li key={test.id}>
-                [{test.name}]: {test.message}
+                [{test.userName}]: {test.message}
               </li>
             ))}
           </ul>
@@ -59,7 +50,9 @@ export const Room: FC<IProps> = ({ logout }) => {
               if (message.length === 0) {
                 return
               }
-              addMessage(message)
+              addMessage(loginUser, message).catch(() => {
+                toast.error('メッセージが送信できませんでした')
+              })
               inputRef.current!.value = ''
             }}
           >
@@ -67,17 +60,6 @@ export const Room: FC<IProps> = ({ logout }) => {
           </button>
         </>
       )}
-      <br />
-      <button
-        type="button"
-        onClick={() => {
-          logout({}).then(() => {
-            history.push(paths.home)
-          })
-        }}
-      >
-        退出
-      </button>
     </div>
   )
 }

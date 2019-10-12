@@ -1,9 +1,9 @@
 import { produce } from 'immer'
-import { UserInfo } from 'firebase'
 import { IUserActionsTypes, USER_ACTION_TYPE } from '../actions/user'
+import { ILoginUser } from '../types'
 
 interface IUserState {
-  user: UserInfo | null
+  user: ILoginUser | null
 }
 
 const initialState: IUserState = {
