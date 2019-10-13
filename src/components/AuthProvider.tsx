@@ -3,6 +3,7 @@ import { auth } from '../helpers/firebase'
 import { ILoginUser } from '../types'
 import { IUserActions } from '../actions/user'
 import { useUser } from '../hooks/useUser'
+import { Loading } from './Loading'
 
 export interface IMapStateToProps {
   loginUser: ILoginUser
@@ -39,5 +40,5 @@ export const AuthProvider: FC<IProps> = ({ setUser, children }) => {
     return () => unsubscribe()
   }, [])
 
-  return initialized ? <>{children}</> : <h1>...loading</h1>
+  return initialized ? <>{children}</> : <Loading />
 }

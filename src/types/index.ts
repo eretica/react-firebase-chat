@@ -34,5 +34,5 @@ export interface IMessage {
   message: string
   user: firestore.DocumentReference
   userName: string
-  createdAt: firestore.FieldValue | null
+  createdAt: firestore.Timestamp | null
 }
