@@ -15,8 +15,11 @@ import {
   Container,
 } from '@material-ui/core'
 import { SendOutlined } from '@material-ui/icons'
+import { animateScroll } from 'react-scroll'
 import { ILoginUser } from '../types'
 import { useMessage } from '../hooks/useMessage'
+import { Loading } from './Loading'
+import { Hider } from './Hider'
 
 export type IMapStateToProps = {
   loginUser: ILoginUser
@@ -31,9 +34,12 @@ const useStyles = makeStyles(() => ({
   footer: {
     position: 'fixed',
     left: 0,
-    bottom: 0,
+    bottom: '1vh',
     width: '100%',
     textAlign: 'center',
+  },
+  sendButton: {
+    cursor: 'pointer',
   },
 }))
 
@@ -74,7 +80,15 @@ export const Room: FC<IProps> = ({ loginUser }) => {
   const messageClasses = useMessageStyles()
   const messageClassesForMe = useMessageStylesForMe()
   const inputRef = useRef<HTMLInputElement>(null)
-  const { messages, addMessage } = useMessage()
+  const prevCountRef = useRef(0)
+  const { messages, addMessage, initialized } = useMessage()
+
+  useEffect(() => {
+    animateScroll.scrollToBottom({
+      duration: prevCountRef.current ? 800 : 0,
+    })
+    prevCountRef.current = messages.length
+  }, [messages])
 
   const handleSubmit = () => {
     const message = inputRef.current!.value.trim()
@@ -84,6 +98,7 @@ export const Room: FC<IProps> = ({ loginUser }) => {
     addMessage(loginUser, message).catch(() => {
       toast.error('メッセージが送信できませんでした')
     })
+
     inputRef.current!.value = ''
   }
 
@@ -109,46 +124,48 @@ export const Room: FC<IProps> = ({ loginUser }) => {
   return (
     <div>
       <Helmet title="Room" />
-      <List className={classes.root}>
-        {messages.map(message => {
-          const fromMe = message.uid === loginUser.uid
-          const messageClass = fromMe ? messageClassesForMe : messageClasses
-          return (
-            <Grid
-              key={message.id}
-              container
-              direction="row"
-              justify={fromMe ? 'flex-end' : 'flex-start'}
-              alignItems="center"
-            >
-              <ListItem alignItems="flex-start" className={messageClass.messageRoot}>
-                <ListItemText
-                  primary={
-                    <span>
-                      <Typography component="span" variant="subtitle2">
-                        {message.userName}
-                      </Typography>
-                    </span>
-                  }
-                  secondary={
-                    // ここなんかえらー
-                    <div className={messageClass.messageBody}>
-                      <Typography
-                        component="span"
-                        variant="body1"
-                        color="textPrimary"
-                        style={{ whiteSpace: 'pre-line' }}
-                      >
-                        {message.message}
-                      </Typography>
-                    </div>
-                  }
-                />
-              </ListItem>
-            </Grid>
-          )
-        })}
-      </List>
+      <Hider isHide={!initialized} insteadOf={<Loading />}>
+        <List className={classes.root}>
+          {messages.map(message => {
+            const fromMe = message.uid === loginUser.uid
+            const messageClass = fromMe ? messageClassesForMe : messageClasses
+            return (
+              <Grid
+                key={message.id}
+                container
+                direction="row"
+                justify={fromMe ? 'flex-end' : 'flex-start'}
+                alignItems="center"
+              >
+                <ListItem alignItems="flex-start" className={messageClass.messageRoot}>
+                  <ListItemText
+                    primary={
+                      <span>
+                        <Typography component="span" variant="caption">
+                          {message.userName}
+                        </Typography>
+                      </span>
+                    }
+                    secondaryTypographyProps={{ component: 'div' }}
+                    secondary={
+                      <div className={messageClass.messageBody}>
+                        <Typography
+                          component="span"
+                          variant="body1"
+                          color="textPrimary"
+                          style={{ whiteSpace: 'pre-line' }}
+                        >
+                          {message.message}
+                        </Typography>
+                      </div>
+                    }
+                  />
+                </ListItem>
+              </Grid>
+            )
+          })}
+        </List>
+      </Hider>
       <form
         style={{ paddingTop: '60px' }}
         onSubmit={e => {
@@ -176,6 +193,7 @@ export const Room: FC<IProps> = ({ loginUser }) => {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment
+                          className={classes.sendButton}
                           position="end"
                           onClick={() => {
                             handleSubmit()
