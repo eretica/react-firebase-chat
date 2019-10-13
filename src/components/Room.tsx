@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core'
 import { SendOutlined } from '@material-ui/icons'
 import { animateScroll } from 'react-scroll'
+import { format } from 'date-fns'
 import { ILoginUser } from '../types'
 import { useMessage } from '../hooks/useMessage'
 import { Loading } from './Loading'
@@ -52,9 +53,13 @@ const useMessageStyles = makeStyles(() => ({
   messageBody: {
     backgroundColor: '#c6e5ff',
     padding: '10px',
-    marginLeft: '15px',
+    marginLeft: '10px',
     width: 'fit-content',
     borderRadius: '10px',
+  },
+  messagePostDate: {
+    display: 'block',
+    marginLeft: '10px',
   },
 }))
 
@@ -69,11 +74,17 @@ const useMessageStylesForMe = makeStyles(() => ({
     border: 'solid 2px',
     display: 'inline-block',
     padding: '10px',
-    marginRight: '15px',
+    marginRight: '10px',
     width: 'fit-content',
     borderRadius: '10px',
   },
+  messagePostDate: {
+    display: 'block',
+    marginRight: '10px',
+  },
 }))
+
+const SCROLL_DURATION = 800
 
 export const Room: FC<IProps> = ({ loginUser }) => {
   const classes = useStyles()
@@ -85,7 +96,7 @@ export const Room: FC<IProps> = ({ loginUser }) => {
 
   useEffect(() => {
     animateScroll.scrollToBottom({
-      duration: prevCountRef.current ? 800 : 0,
+      duration: prevCountRef.current ? SCROLL_DURATION : 0,
     })
     prevCountRef.current = messages.length
   }, [messages])
@@ -141,23 +152,37 @@ export const Room: FC<IProps> = ({ loginUser }) => {
                   <ListItemText
                     primary={
                       <span>
-                        <Typography component="span" variant="caption">
-                          {message.userName}
-                        </Typography>
+                        {!fromMe && (
+                          <Typography component="span" variant="body2">
+                            {message.userName}
+                          </Typography>
+                        )}
                       </span>
                     }
                     secondaryTypographyProps={{ component: 'div' }}
                     secondary={
-                      <div className={messageClass.messageBody}>
+                      <>
+                        <div className={messageClass.messageBody}>
+                          <Typography
+                            component="span"
+                            variant="body1"
+                            color="textPrimary"
+                            style={{ whiteSpace: 'pre-line', wordBreak: 'break-all' }}
+                          >
+                            {message.message}
+                          </Typography>
+                        </div>
+
                         <Typography
                           component="span"
-                          variant="body1"
-                          color="textPrimary"
-                          style={{ whiteSpace: 'pre-line' }}
+                          variant="caption"
+                          className={messageClass.messagePostDate}
                         >
-                          {message.message}
+                          {message.createdAt
+                            ? format(message.createdAt.toDate(), 'yyyy-MM-dd hh:mm')
+                            : ''}
                         </Typography>
-                      </div>
+                      </>
                     }
                   />
                 </ListItem>

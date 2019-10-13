@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { useHistory } from 'react-router'
 import { toast } from 'react-toastify'
-import { AppBar, Toolbar, Typography, Button, makeStyles } from '@material-ui/core'
+import { AppBar, Toolbar, Typography, Button, Grid, makeStyles } from '@material-ui/core'
 import { ILoginUser } from '../types'
 import { IUserActions } from '../actions/user'
 import { paths } from '../paths'
@@ -40,17 +40,23 @@ export const NavigationBar: FC<IProps> = ({ loginUser, logout }) => {
             </Typography>
 
             {loginUser && (
-              <Button
-                color="inherit"
-                onClick={() => {
-                  logout({}).then(() => {
-                    toast.warn('退出しました')
-                    history.push(paths.home)
-                  })
-                }}
-              >
-                退出
-              </Button>
+              <>
+                <Grid container direction="row" justify="center" alignItems="center">
+                  <Typography variant="h6">{loginUser.name}</Typography>
+                </Grid>
+
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    logout({}).then(() => {
+                      toast.warn('退出しました')
+                      history.push(paths.home)
+                    })
+                  }}
+                >
+                  退出
+                </Button>
+              </>
             )}
           </Toolbar>
         </AppBar>

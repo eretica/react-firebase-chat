@@ -20,19 +20,18 @@ export type ILoginUser = {
   name: string
 }
 
-export interface IMessageForPost {
+interface IMessageBase {
   uid: string
   message: string
-  createdAt: firestore.FieldValue | null
   user: firestore.DocumentReference
   userName: string
 }
 
-export interface IMessage {
+export interface IMessageForPost extends IMessageBase {
+  createdAt: firestore.FieldValue | null
+}
+
+export interface IMessage extends IMessageBase {
   id: string
-  uid: string
-  message: string
-  user: firestore.DocumentReference
-  userName: string
   createdAt: firestore.Timestamp | null
 }
