@@ -26,31 +26,6 @@ export interface IDispatchProps {
 
 type IProps = IMapStateToProps & IDispatchProps
 
-const useStyles = makeStyles(theme => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}))
-
 export const Home: FC<IProps> = ({ login, loginUser }) => {
   const { history } = useRouter()
   const [posting, setPosting] = useState(false)
@@ -85,6 +60,7 @@ export const Home: FC<IProps> = ({ login, loginUser }) => {
             const name = inputRef.current!.value
 
             if (name.length === 0) {
+              toast.warn('名前を入力してください')
               return
             }
 
@@ -126,3 +102,28 @@ export const Home: FC<IProps> = ({ login, loginUser }) => {
     </Container>
   )
 }
+
+const useStyles = makeStyles(theme => ({
+  '@global': {
+    body: {
+      backgroundColor: theme.palette.common.white,
+    },
+  },
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}))

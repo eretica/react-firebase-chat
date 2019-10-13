@@ -16,16 +16,6 @@ export interface IDispatchProps {
 
 type IProps = IMapStateToProps & IDispatchProps
 
-const useStyles = makeStyles(() => ({
-  root: {
-    flexGrow: 1,
-    marginBottom: '64px',
-  },
-  title: {
-    flexGrow: 1,
-  },
-}))
-
 export const NavigationBar: FC<IProps> = ({ loginUser, logout }) => {
   const history = useHistory()
   const classes = useStyles()
@@ -35,7 +25,7 @@ export const NavigationBar: FC<IProps> = ({ loginUser, logout }) => {
       <div className={classes.root}>
         <AppBar position="fixed">
           <Toolbar>
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h5" className={classes.title}>
               Chat
             </Typography>
 
@@ -64,3 +54,13 @@ export const NavigationBar: FC<IProps> = ({ loginUser, logout }) => {
     </div>
   )
 }
+
+const useStyles = makeStyles(() => ({
+  root: {
+    flexGrow: 1,
+    marginBottom: '64px',
+  },
+  title: {
+    flexGrow: 1,
+  },
+}))

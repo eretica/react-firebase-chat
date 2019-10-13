@@ -39,6 +39,7 @@ module.exports = {
     'import/named': 'off',
     'import/prefer-default-export': 'off',
     'no-param-reassign': 'off',
+    'no-use-before-define': 'off',
     'no-unused-vars': 'off',
     'no-shadow': ['error', {
       'allow': ['_'],
