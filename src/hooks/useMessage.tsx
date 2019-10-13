@@ -26,7 +26,6 @@ export const useMessage = () => {
       message,
       user: db.doc(`${COLLECTION.USERS}/${user.uid}`),
       userName: user.name,
-      // fetchedAt: firestore.Timestamp.fromDate(new Date(0)),
       createdAt: firestore.FieldValue.serverTimestamp(),
     }
 

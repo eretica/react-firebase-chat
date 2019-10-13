@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react'
 import { auth } from '../helpers/firebase'
 import { ILoginUser } from '../types'
 import { IUserActions } from '../actions/user'
-import { useUser } from '../hooks/useUser'
 import { Loading } from './Loading'
 
 export interface IMapStateToProps {
@@ -17,14 +16,9 @@ type IProps = IMapStateToProps & IDispatchProps
 
 export const AuthProvider: FC<IProps> = ({ setUser, children }) => {
   const [initialized, setInitialized] = useState(false)
-  const { updateUser } = useUser()
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(credential => {
-      if (credential) {
-        updateUser(credential)
-      }
-
       setUser({
         user: credential
           ? {

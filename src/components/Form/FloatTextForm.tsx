@@ -57,13 +57,7 @@ export const FloatTextForm: FC<IProps> = ({ onSubmit, autoClear = true, label })
   }, [inputRef])
 
   return (
-    <form
-      style={{ paddingTop: '60px' }}
-      onSubmit={e => {
-        e.preventDefault()
-        handleSubmit()
-      }}
-    >
+    <div style={{ paddingTop: '60px' }}>
       <Grid
         container
         direction="row"
@@ -100,7 +94,7 @@ export const FloatTextForm: FC<IProps> = ({ onSubmit, autoClear = true, label })
           </Grid>
         </Container>
       </Grid>
-    </form>
+    </div>
   )
 }
 
