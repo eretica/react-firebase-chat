@@ -14,6 +14,7 @@ const App: FC = () => {
         <NavigationBar />
         <Switch>
           <Route exact path={paths.home} component={Home} />
+          {/* Auth配下はログインしてないと入れない */}
           <Auth>
             <Route exact path={paths.room} component={Room} />
             <Redirect to={paths.room} />

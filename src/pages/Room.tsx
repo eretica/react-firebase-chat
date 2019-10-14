@@ -35,7 +35,7 @@ export const Room: FC<IProps> = ({ loginUser }) => {
         <Messages loginUser={loginUser} messages={messages} />
       </Hider>
 
-      {/* todo enter 経由だとイベントが更新されないので、nameをkeyにしておく */}
+      {/* todo enter 経由だとonSubmit内の処理がが更新されないので、nameをkeyにしておく */}
       <FloatTextForm
         key={loginUser.name}
         label="メッセージ"

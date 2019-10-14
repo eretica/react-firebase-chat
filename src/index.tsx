@@ -11,7 +11,9 @@ import AuthProvider from './containers/AuthProvider'
 
 ReactDOM.render(
   <Provider store={store}>
+    {/* 通知用のProvider */}
     <ToastContainer position={toast.POSITION.TOP_RIGHT} autoClose={2000} />
+    {/* 認証用。ログインとかログイン中とかしてくれる */}
     <AuthProvider>
       <App />
     </AuthProvider>
